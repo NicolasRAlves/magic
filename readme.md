@@ -2,6 +2,8 @@
 
 Este repositório contém um exercício prático sobre Programação Orientada a Objetos (POO). O objetivo é aplicar as regras para a criação de uma poção mágica usando interface para atendendes os princípios do SOLID.
 
+![Tela do Sistema](docs/screen.jpeg)
+
 ## Objetivo do Exercício
 
 - Praticar os conceitos de POO, como encapsulamento, herança, polimorfismo e abstração.
