@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Poção Mágica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-r from-indigo-200 to-purple-300 min-h-screen flex flex-col items-center p-8">
+
+    <h1 class="text-4xl font-bold mb-6">Crie sua Poção Mágica!</h1>
+
+    <div class="w-full max-w-4xl flex gap-8">
+        <div class="w-3/6">
+            <div class="grid gap-4">
+                <div th:each="ingrediente : ${ingredientesDisponiveis}"
+                    class="bg-white p-2 rounded shadow-lg flex items-center gap-4">
+                    <div>
+                        <p class="text-lg font-semibold" th:text="${ingrediente.nome}"></p>
+                        <p class="text-sm text-gray-600" th:text="${ingrediente.descricao}"></p>
+                    </div>
+                    <img draggable="true" th:data-id="${ingrediente.id}" th:src="${ingrediente.imagem}"
+                        alt="Imagem do ingrediente" class="w-16 h-16 rounded object-cover">
+                </div>
+            </div>
+        </div>
+
+        <div id="mago" class="w-3/6 bg-white p-6 rounded-xl shadow-lg">
+            <img id="imagem-mago" src="NORMAL.png" alt="arraste as poções aqui">
+            <div id="caldeirao" class="flex gap-2 flex-wrap"></div>
+            <div>
+                <button id="btnLimpar" class="mt-4 bg-red-500 text-white py-2 px-4 rounded shadow hover:bg-red-600"
+                    th:onclick="'limpar()'">Limpar</button>
+                <button id="btnMisturar" class="mt-4 bg-purple-500 text-white py-2 px-4 rounded shadow hover:bg-purple-600"
+                    th:if="${pocao == null}" th:onclick="'misturar()'">Misturar</button>
+            </div>
+                <div id="resultado"></div>
+                <div id="detalhes"></div>
+        </div>
+    </div>
+
+    <div id="resultado" class="mt-6 w-full max-w-md" th:if="${resultado != null}">
+        <div class="bg-yellow-100 p-4 rounded-xl shadow text-center">
+            <p class="text-lg font-semibold" th:text="${resultado.descricao}"></p>
+        </div>
+    </div>
+
+    <div id="detalhes" class="mt-4 max-w-md w-full grid gap-2" th:if="${pocao != null}">
+        <div class="bg-white p-4 rounded shadow">
+            <p><strong>Potência:</strong> <span th:text="${pocao.potencia}"></span></p>
+            <p><strong>Estabilidade:</strong> <span th:text="${pocao.estabilidade}"></span></p>
+            <p><strong>Cheiro ruim?</strong> <span th:text="${pocao.cheiroRuim}"></span></p>
+            <p><strong>Faz dormir?</strong> <span th:text="${pocao.causaSono}"></span></p>
+            <p><strong>Efeito mágico?</strong> <span th:text="${pocao.efeitoMagico}"></span></p>
+        </div>
+    </div>
+
+    <script>
+        const ids = [];
+        const dropZone = document.querySelector("#mago");
+        let draggedIngredient = null;
+
+        document.querySelectorAll('[draggable="true"]').forEach(item => {
+            item.addEventListener('dragstart', (event) => {
+                draggedIngredient = event.target;
+                event.dataTransfer.setData('text/plain', event.target.dataset.id);
+                event.target.classList.add('opacity-50'); 
+            });
+
+            item.addEventListener('dragend', (event) => {
+                event.target.classList.remove('opacity-50');
+            });
+        });
+
+        dropZone.addEventListener('dragover', (event) => {
+            event.preventDefault(); 
+            dropZone.classList.add('border-4', 'border-dashed', 'border-purple-400', 'bg-purple-100'); 
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-4', 'border-dashed', 'border-purple-400', 'bg-purple-100');
+        });
+
+        dropZone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropZone.classList.remove('border-4', 'border-dashed', 'border-purple-400', 'bg-purple-100');
+
+            if (draggedIngredient) {
+                const clone = draggedIngredient.cloneNode(true);
+                clone.removeAttribute('draggable'); 
+                clone.classList.remove('opacity-50');
+                dropZone.querySelector("#caldeirao").appendChild(clone);
+                clone.addEventListener('dragstart', (event) => {
+                    event.preventDefault(); 
+                });
+
+                const ingredienteId = event.dataTransfer.getData('text/plain');
+                ids.push(parseInt(ingredienteId, 10));
+                console.log(`Ingrediente com ID ${ingredienteId} foi adicionado.`);
+                console.log(ids);
+            }
+        });
+
+        function misturar(){
+            fetch('http://localhost:8080/misturar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(ids)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao misturar os ingredientes');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Resultado da mistura:', data);
+
+                document.querySelector("#resultado").innerHTML = `
+                    <div class="bg-yellow-100 p-4 rounded-xl shadow text-center">
+                        <p class="text-lg font-semibold">${data.descricao}</p>
+                    </div>
+                `;
+                document.querySelector("#detalhes").innerHTML = `
+                    <div class="bg-white p-4 rounded shadow">
+                        <p><strong>Potência:</strong> ${data.pocao.potencia}</p>
+                        <p><strong>Estabilidade:</strong> ${data.pocao.estabilidade}</p>
+                        <p><strong>Cheiro ruim?</strong> ${data.pocao.cheiroRuim}</p>
+                        <p><strong>Faz dormir?</strong> ${data.pocao.causaSono}</p>
+                        <p><strong>Efeito mágico?</strong> ${data.pocao.efeitoMagico}</p>
+                    </div>
+                `;
+                document.querySelector("#imagem-mago").src = data.resultado + ".png";
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Ocorreu um erro ao misturar os ingredientes.');
+            });
+        }
+
+        function limpar() {
+            const caldeirao = document.querySelector("#caldeirao");
+            caldeirao.innerHTML = '';
+            ids.length = 0; 
+            document.querySelector("#resultado").innerHTML = '';
+            document.querySelector("#detalhes").innerHTML = '';
+            document.querySelector("#imagem-mago").src = "NORMAL.png";
+        }
+    </script>
+
+</body>
+
+</html>
