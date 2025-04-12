@@ -35,6 +35,7 @@ public class PocaoController {
     @PostMapping("/misturar")
     @ResponseBody
     public PocaoResponse misturar(@RequestBody List<Integer> idsSelecionados, Model model) {
+        System.out.println("recebido" + idsSelecionados);
         List<Ingrediente> ingredientesSelecionados = new ArrayList<>();
         for(int id: idsSelecionados){
             for(Ingrediente ingrediente: pocaoService.getIngredientesDisponiveis()){
