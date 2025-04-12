@@ -1,59 +1,61 @@
-# Projeto: Poção Mágica
+# ✨ Magic — Jogo de Poções Mágicas em Java
 
-Este repositório contém um exercício prático sobre Programação Orientada a Objetos (POO). O objetivo é aplicar as regras para a criação de uma poção mágica usando interface para atendendes os princípios do SOLID.
+Um projeto desenvolvido com foco em reforçar os pilares da Programação Orientada a Objetos, aplicando conceitos como **herança, abstração, composição e polimorfismo** de forma prática e divertida.
+
+Aqui, você assume o papel de um aprendiz de mago 🧙‍♂️ que precisa combinar ingredientes para criar poções com efeitos variados — algumas incríveis, outras... nem tanto.
 
 ![Tela do Sistema](docs/screen.jpeg)
 
-## Objetivo do Exercício
+---
 
-- Praticar os conceitos de POO, como encapsulamento, herança, polimorfismo e abstração.
-- Criar classes que representem modelos de um sistema, com atributos e métodos adequados.
+## 🔧 Sobre o Projeto
 
-## Objetivo do Jogo
+Esse repositório contém minha implementação pessoal de um desafio proposto em sala de aula.  
+A proposta era clara: sair da teoria e aplicar POO de verdade em um sistema com lógica de negócio, usando interfaces, enums e modelagem orientada a objetos.
 
-O jogador (um aprendiz de mago 🧙‍♂️) mistura ingredientes para criar uma poção com efeitos mágicos.
-Cada ingrediente altera o estado da poção. Ao final, o sistema avalia o resultado da poção com base nos efeitos acumulados.
+Trabalhei a estrutura, comportamento e integração entre as classes `Pocao`, `Ingrediente` e suas variações específicas, além de organizar a lógica de avaliação do resultado final com base nos efeitos acumulados.
 
-## Classes
+---
 
-### Ingrediente
+## 🚀 Funcionalidades
 
-Classe abstrata que representa um ingrediente. Deve conter os seguintes atributos e métodos:
-- `id` (int):  identificador único do ingrediente.
-- `nome` (String): nome do ingrediente.
-- `imagem` (String): URL da imagem do ingrediente.
-- `descricao` (String): descrição do ingrediente.
-- Método construtor com todos os parâmetros.
-- Métodos getters para todos os atributos.
+- Mistura dinâmica de ingredientes com diferentes efeitos
+- Avaliação final da poção com base em regras de negócio
+- Interface visual com interação via drag & drop
+- Separação clara entre `model`, `controller` e `service`
 
-### Misturavel
+---
 
-Interface que representa um ingrediente que pode ser misturado. Deve conter o seguinte método:
-- `misturar(Pocao)`: método que deve ser implementado pelas classes que representam ingredientes misturáveis. Este método recebe uma instância da classe Pocao e deve aplicar os efeitos do ingrediente na poção. Esse método não tem retorno.
+## 🧩 Estrutura de Lógica
 
-### Pocao
+- `Ingrediente` — classe abstrata base
+- `Misturavel` — interface que define o comportamento de mistura
+- `Pocao` — classe que representa o estado da poção
+- Ingredientes específicos como `Mandagora`, `FlorDoSono`, `RaizApodrecida`, `OrvalhoEncantado` e `RaizApodrecida`.
 
-Classe que representa a poção. Deve conter os seguintes atributos e métodos:
-- `potencia` (int): potência da poção, inicia com 0.
-- `estabilidade` (int): estabilidade da poção, inicia com 100.
-- `cheiroRuim` (boolean): indica se a poção tem cheiro ruim, inicia com false.
-- `causaSono` (boolean): indica se a poção causa sono, inicia com false.
-- `efeitoMagico` (boolean): indica se a poção tem efeito mágico, inicia com false.
-- `ingredientesUsados` (List<Misturavel>): lista de ingredientes usados na poção.
-- Método `misturar(Misturavel ingrediente)`: recebe um ingrediente, aplica os efeitos na poção e adiciona o ingrediente à lista de ingredientes usados.
-- Métodos getters e setters para todos os atributos.
+Cada classe segue uma responsabilidade única e colabora com o restante do sistema por meio de composição e interface.
 
-### Ingredientes
+---
 
-Uma classe para cada ingrediente. A classe é um ingrediente e é misturável. Cada ingrediente deve ter um efeito específico na poção.
+## 💻 Como executar
 
+1. Clone o projeto:
+   ```bash
+   git clone https://github.com/NicolasRAlves/magic.git
+   ```
 
-| Ingrediente           | Potência | Estabilidade | Cheiro Ruim | Causa Sono | Efeito Mágico | Observações                       |
-|-----------------------|----------|--------------|-------------|------------|----------------|-----------------------------------|
-| Mandagora            | +30      | -20          | ❌          | ❌         | ❌             | Potente, mas instável             |
-| FlorDoSono          | 0        | +10          | ❌          | ✅         | ❌             | Tranquilizante e estável          |
-| RaizApodrecida       | +20      | 0            | ✅          | ❌         | ❌             | Fedorenta e potente               |
-| OrvalhoEncantado     | 0        | +10          | ❌          | ❌         | ✅             | Fraca, mas mágica                 |
-| PoeiraDeEstrela     | +10      | +20          | ❌          | ❌         | ❌             | Ingrediente mais equilibrado     |
+2. Abra no IntelliJ ou outro IDE com suporte a Spring Boot
 
+3. Rode a aplicação no App.java
 
+4. Acesse no navegador: http://localhost:8080
+
+---
+
+## 🙏 Agradecimento
+
+Este projeto foi desenvolvido como parte de um desafio proposto em sala de aula pelo professor **João Carlos Lima** ([joaocarloslima](https://github.com/joaocarloslima)).  
+A proposta foi criativa e permitiu explorar conceitos importantes de Java de maneira prática e envolvente.  
+Agradeço pela oportunidade de aplicar o que foi ensinado de forma concreta e desafiadora.
+
+---
